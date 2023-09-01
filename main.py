@@ -46,7 +46,7 @@ if site.ObjectPlacement is not None and site.ObjectPlacement.is_a("IfcLocalPlace
              0.)
         )
     )
-    # assign the new placement also to other nodes in the hierarchy
+    # назначение положения ссылочны объектам в иерархии
     for ref in refs:
         if ref.is_a("IfcLocalPlacement"): ref.PlacementRelTo = site.ObjectPlacement
 
@@ -58,7 +58,6 @@ with open(pathProjectInfo, encoding='UTF-8', mode='r') as file:
         param_value[0] = param_value[0].strip()
         param_value[1] = param_value[1].strip()
         if param_value[0] in param_mapping.keys():
-            print(param_mapping[param_value[0]][1])
             if param_mapping[param_value[0]][1] == "Text":
                 param_value[0] = param_mapping[param_value[0]][0]
                 param_dict[param_value[0]] = param_value[1]
@@ -72,12 +71,13 @@ with open(pathProjectInfo, encoding='UTF-8', mode='r') as file:
                 param_value[0] = param_mapping[param_value[0]][0]
                 param_dict[param_value[0]] = model.createIfcVolumeMeasure(float(param_value[1].replace(',','.')))
 
-# Добавление и назначение параметров
+# Добавление PSet для объекта IfcBuilding
+pset = ifcopenshell.api.run("pset.add_pset", model, product=building, name="Идентификация")
+
+# Редактирование добавленного PSet
 for relationship in building.IsDefinedBy:
-    print(relationship)
     if relationship.is_a('IfcRelDefinesByProperties'):
         definition = relationship.RelatingPropertyDefinition
-        print(definition)
         ifcopenshell.api.run('pset.edit_pset', model, pset=definition, properties=param_dict)
 
 # Запись изменений в модель
