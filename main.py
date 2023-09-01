@@ -72,7 +72,7 @@ with open(pathProjectInfo, encoding='UTF-8', mode='r') as file:
                 param_dict[param_value[0]] = model.createIfcVolumeMeasure(float(param_value[1].replace(',','.')))
 
 # Добавление PSet для объекта IfcBuilding
-pset = ifcopenshell.api.run("pset.add_pset", model, product=building, name="Идентификация")
+pset = ifcopenshell.api.run("pset.add_pset", model, product=building, name="Общие параметры здания")
 
 # Редактирование добавленного PSet
 for relationship in building.IsDefinedBy:
